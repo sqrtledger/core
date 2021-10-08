@@ -3,5 +3,9 @@ export interface ITransaction {
 
   collectionReference: string;
 
-  status: 'initiating' | 'pending' | 'complete' | 'failed';
+  metadata: { [key: string]: string };
+
+  status: 'created' | 'processed' | 'completed' | 'failed';
+
+  type: 'credit' | 'debit';
 }

@@ -1,7 +1,7 @@
-import { ITransaction } from '../models';
+import { IAccount, ITransaction } from '../models';
 
 export interface ITransactionRepository {
-  create(transaction: ITransaction): Promise<ITransaction>;
+  create(account: IAccount, transaction: ITransaction): Promise<ITransaction>;
 
-  update(transaction: ITransaction): Promise<ITransaction>;
+  update(account: IAccount, transaction: ITransaction): Promise<ITransaction>;
 }
