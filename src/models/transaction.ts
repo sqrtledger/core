@@ -5,7 +5,7 @@ export interface ITransaction {
 
   metadata: { [key: string]: string };
 
-  status: 'created' | 'processed' | 'completed' | 'failed';
+  reference: string;
 
-  type: 'credit' | 'debit';
+  status: 'created' | 'processed' | 'completed' | 'failed';
 }
