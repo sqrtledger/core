@@ -13,6 +13,12 @@ export class MongoDbAccountRepository implements IAccountRepository {
     return account;
   }
 
+  public async delete(reference: string): Promise<void> {
+    await this.collection.deleteOne({
+      reference,
+    });
+  }
+
   public async find(reference: string): Promise<IAccount | null> {
     return await this.collection.findOne<IAccount>(
       {

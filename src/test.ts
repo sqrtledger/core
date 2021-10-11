@@ -1,10 +1,12 @@
 import * as MongoDb from 'mongodb';
 import * as Uuid from 'uuid';
 import {
+  IAccount,
   IAccountRepository,
-  InMemoryTransactionRepository,
+  InMemoryAccountRepository,
   ITransactionRepository,
   MongoDbAccountRepository,
+  MongoDbTransactionRepository,
   TransactionService,
 } from '.';
 
@@ -13,48 +15,69 @@ import {
 
   const db = mongoClient.db('sqrtledger');
 
-  const collection = db.collection('accounts');
+  const collectionAccounts = db.collection('accounts');
 
-  const accountRepository: IAccountRepository = new MongoDbAccountRepository(
-    collection
-  );
+  const collectionTransactions = db.collection('transactions');
+
+  // const accountRepository: IAccountRepository = new MongoDbAccountRepository(
+  //   collectionAccounts
+  // );
+
+  const accountRepository: IAccountRepository = new InMemoryAccountRepository();
 
   const transactionRepository: ITransactionRepository =
-    new InMemoryTransactionRepository();
+    new MongoDbTransactionRepository(collectionTransactions);
 
   const transactionService: TransactionService = new TransactionService(
     accountRepository,
     transactionRepository
   );
 
-  // await accountRepository.create({
-  //   availableBalance: 1000,
-  //   balance: 1000,
-  //   label: 'Current Account',
-  //   metadata: {
-  //     country: 'Spain',
-  //   },
-  //   name: 'Current Account',
-  //   reference: '827977177',
-  //   settings: {
-  //     allowCreditTransactions: true,
-  //     allowDebitTransactions: true,
-  //     allowTransactions: true,
-  //   },
-  //   status: 'active',
-  // });
+  const account: IAccount | null = await accountRepository.find('827977177');
 
-  await Promise.all([
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-    execute(1, transactionService),
-  ]);
+  if (!account) {
+    await accountRepository.create({
+      availableBalance: 1000,
+      balance: 1000,
+      label: 'Current Account',
+      metadata: {
+        country: 'Spain',
+      },
+      name: 'Current Account',
+      reference: '827977177',
+      settings: {
+        allowCreditTransactions: true,
+        allowDebitTransactions: true,
+        allowTransactions: true,
+      },
+      status: 'active',
+    });
+  }
+
+  const timestamp1 = new Date().getTime();
+
+  // await Promise.all([
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  //   execute(1, transactionService),
+  // ]);
+
+  const n = 10000;
+
+  for (let i = 0; i < n; i++) {
+    await execute(i, transactionService);
+  }
+
+  const timestamp2 = new Date().getTime();
+
+  console.log(n / ((timestamp2 - timestamp1) / 1000));
 
   console.log(await accountRepository.find('827977177'));
 
@@ -63,25 +86,19 @@ import {
 
 async function execute(n: number, transactionService: TransactionService) {
   try {
-    await sleep();
-
     const result1 = await transactionService.create(
       '827977177',
       100,
       Uuid.v4(),
       {},
-      '603915804',
+      Uuid.v4(),
       'debit'
     );
-
-    await sleep();
 
     const result2 = await transactionService.process(
       result1.account,
       result1.transaction
     );
-
-    await sleep();
 
     const result3 = await transactionService.complete(
       result2.account,
@@ -92,8 +109,6 @@ async function execute(n: number, transactionService: TransactionService) {
   }
 }
 
-async function sleep() {
-  const timeout = Math.floor(Math.random() * 300 + 100);
-
-  await new Promise((resolve) => setTimeout(resolve, timeout));
+async function sleep(n: number) {
+  await new Promise((resolve) => setTimeout(resolve, n));
 }

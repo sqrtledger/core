@@ -12,6 +12,8 @@ export class InMemoryAccountRepository implements IAccountRepository {
     return account;
   }
 
+  public async delete(reference: string): Promise<void> {}
+
   public async find(reference: string): Promise<IAccount | null> {
     return (
       this.accounts.find((x: IAccount) => x.reference === reference) || null

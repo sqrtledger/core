@@ -53,7 +53,9 @@ export class TransactionService {
       throw new Error('invalid amount');
     }
 
-    // Validate metadata
+    if (!metadata) {
+      throw new Error('invalid metadata');
+    }
 
     if (type !== 'credit' && type !== 'debit') {
       throw new Error('invalid type');
