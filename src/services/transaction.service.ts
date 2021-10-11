@@ -93,6 +93,49 @@ export class TransactionService {
     };
   }
 
+  public async full(
+    accountReference: string,
+    amount: number,
+    collectionReference: string,
+    metadata: { [key: string]: string },
+    reference: string,
+    type: string // credit, debit
+  ): Promise<{ account: IAccount; transaction: ITransaction }> {
+    const resultCreate = await this.create(
+      accountReference,
+      amount,
+      collectionReference,
+      metadata,
+      reference,
+      type
+    );
+
+    const resultProcess = await this.process(
+      resultCreate.account,
+      resultCreate.transaction
+    );
+
+    const resultComplete = await this.complete(
+      resultProcess.account,
+      resultProcess.transaction
+    );
+
+    return resultComplete;
+  }
+
+  public async fullMultiple(
+    requests: Array<{
+      accountReference: string;
+      amount: number;
+      collectionReference: string;
+      metadata: { [key: string]: string };
+      reference: string;
+      type: string; // credit, debit
+    }>
+  ): Promise<{ account: IAccount; transaction: ITransaction }> {
+    throw new Error('not implemented');
+  }
+
   public async process(
     account: IAccount,
     transaction: ITransaction

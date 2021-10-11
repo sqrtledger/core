@@ -86,7 +86,7 @@ import {
 
 async function execute(n: number, transactionService: TransactionService) {
   try {
-    const result1 = await transactionService.create(
+    const result = await transactionService.full(
       '827977177',
       100,
       Uuid.v4(),
@@ -94,21 +94,7 @@ async function execute(n: number, transactionService: TransactionService) {
       Uuid.v4(),
       'debit'
     );
-
-    const result2 = await transactionService.process(
-      result1.account,
-      result1.transaction
-    );
-
-    const result3 = await transactionService.complete(
-      result2.account,
-      result2.transaction
-    );
   } catch (error: any) {
     console.log(`${n}: ${error.message}`);
   }
-}
-
-async function sleep(n: number) {
-  await new Promise((resolve) => setTimeout(resolve, n));
 }
