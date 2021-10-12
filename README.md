@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/sqrtledger/core">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Sqrt Ledger Core</h3>
