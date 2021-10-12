@@ -2,8 +2,8 @@
 
 ![Contributors](https://img.shields.io/github/contributors/sqrtledger/core.svg?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/sqrtledger/core.svg?style=for-the-badge)
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
+![Stargazers](https://img.shields.io/github/stars/sqrtledger/core.svg?style=for-the-badge)
+[![Issues](https://img.shields.io/github/issues/sqrtledger/core.svg?style=for-the-badge)](https://github.com/sqrtledger/core/issues)
 ![MIT License](https://img.shields.io/github/license/sqrtledger/core.svg?style=for-the-badge)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://linkedin.com/in/hirebarend)
 
