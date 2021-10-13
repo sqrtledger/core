@@ -1,6 +1,6 @@
 {
   "name": "sqrtledger-core",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "The Open-Source API-First Ledger",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
