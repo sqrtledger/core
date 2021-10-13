@@ -141,7 +141,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 - [ ] Implement Account Service
 - [ ] Implement Transaction Service
-- [ ] Implement `createProcessCompleteMultiple` function in Transaction Service
+  - [ ] Implement `createProcessCompleteMultiple` function in Transaction Service
 - [ ] Redis implementation of the Account Repository
 
 See the [open issues](https://github.com/sqrtledger/core/issues) for a full list of proposed features (and known issues).
