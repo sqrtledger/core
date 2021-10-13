@@ -93,7 +93,7 @@ export class TransactionService {
     };
   }
 
-  public async full(
+  public async createProcessComplete(
     accountReference: string,
     amount: number,
     collectionReference: string,
@@ -123,7 +123,7 @@ export class TransactionService {
     return resultComplete;
   }
 
-  public async fullMultiple(
+  public async createProcessCompleteMultiple(
     requests: Array<{
       accountReference: string;
       amount: number;
@@ -132,8 +132,64 @@ export class TransactionService {
       reference: string;
       type: string; // credit, debit
     }>
+  ): Promise<Array<{ account: IAccount; transaction: ITransaction }>> {
+    const resultsCreate: Array<{
+      account: IAccount;
+      transaction: ITransaction;
+    }> = [];
+
+    for (const request of requests) {
+      const resultCreate = await this.create(
+        request.accountReference,
+        request.amount,
+        request.collectionReference,
+        request.metadata,
+        request.reference,
+        request.type
+      );
+
+      resultsCreate.push(resultCreate);
+    }
+
+    const resultsProcess: Array<{
+      account: IAccount;
+      transaction: ITransaction;
+    }> = [];
+
+    for (const resultCreate of resultsCreate) {
+      const resultProcess = await this.process(
+        resultCreate.account,
+        resultCreate.transaction
+      );
+
+      resultsProcess.push(resultProcess);
+    }
+
+    const resultsComplete: Array<{
+      account: IAccount;
+      transaction: ITransaction;
+    }> = [];
+
+    for (const resultProcess of resultsProcess) {
+      const resultComplete = await this.complete(
+        resultProcess.account,
+        resultProcess.transaction
+      );
+
+      resultsComplete.push(resultComplete);
+    }
+
+    return resultsComplete;
+  }
+
+  public async fail(
+    account: IAccount,
+    transaction: ITransaction
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
-    throw new Error('not implemented');
+    return {
+      account,
+      transaction,
+    };
   }
 
   public async process(
