@@ -139,10 +139,24 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [ ] Implement Account Service
-- [ ] Implement Transaction Service
-  - [ ] Implement `createProcessCompleteMultiple` function in Transaction Service
-- [ ] Redis implementation of the Account Repository
+- [ ] Account Service
+  - [ ] Implement `find` function
+- [ ] Transaction Service
+  - [ ] Implement `complete` function
+  - [ ] Implement `create` function
+  - [ ] Implement `createProcessComplete` function
+  - [ ] Implement `createProcessCompleteMultiple` function
+  - [ ] Implement `fail` function
+  - [ ] Implement `process` function
+    - [ ] Implement unique reference constraint
+- [ ] Account Repository using Redis
+  - [ ] Implement `create` function
+  - [ ] Implement `delete` function
+  - [ ] Implement `find` function
+  - [ ] Implement `updateAvailableBalance` function
+  - [ ] Implement `updateBalance` function
+- [ ] Reporting
+  - [ ] Implement Account Statement
 
 See the [open issues](https://github.com/sqrtledger/core/issues) for a full list of proposed features (and known issues).
 
