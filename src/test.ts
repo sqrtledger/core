@@ -86,14 +86,14 @@ import {
 
 async function execute(n: number, transactionService: TransactionService) {
   try {
-    const result = await transactionService.full(
-      '827977177',
-      100,
-      Uuid.v4(),
-      {},
-      Uuid.v4(),
-      'debit'
-    );
+    // const result = await transactionService.full(
+    //   '827977177',
+    //   100,
+    //   Uuid.v4(),
+    //   {},
+    //   Uuid.v4(),
+    //   'debit'
+    // );
   } catch (error: any) {
     console.log(`${n}: ${error.message}`);
   }

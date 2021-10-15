@@ -29,15 +29,20 @@ export class TransactionService {
       throw new Error('insufficient balance');
     }
 
-    return {
-      account: await this.accountRepository.updateBalance(
-        transaction.amount,
-        account.reference
-      ),
-      transaction: await this.transactionRepository.update(account, {
+    const transactionCompleted: ITransaction =
+      await this.transactionRepository.update(account, {
         ...transaction,
         status: 'completed',
-      }),
+      });
+
+    const accountUpdated: IAccount = await this.accountRepository.updateBalance(
+      transaction.amount,
+      account.reference
+    );
+
+    return {
+      account: accountUpdated,
+      transaction: transactionCompleted,
     };
   }
 
@@ -110,17 +115,23 @@ export class TransactionService {
       type
     );
 
-    const resultProcess = await this.process(
-      resultCreate.account,
-      resultCreate.transaction
-    );
+    try {
+      const resultProcess = await this.process(
+        resultCreate.account,
+        resultCreate.transaction
+      );
 
-    const resultComplete = await this.complete(
-      resultProcess.account,
-      resultProcess.transaction
-    );
+      const resultComplete = await this.complete(
+        resultProcess.account,
+        resultProcess.transaction
+      );
 
-    return resultComplete;
+      return resultComplete;
+    } catch (error) {
+      await this.fail(resultCreate.account, resultCreate.transaction);
+
+      throw error;
+    }
   }
 
   public async createProcessCompleteMultiple(
@@ -200,15 +211,21 @@ export class TransactionService {
       throw new Error('insufficient available balance');
     }
 
-    return {
-      account: await this.accountRepository.updateAvailableBalance(
-        transaction.amount,
-        account.reference
-      ),
-      transaction: await this.transactionRepository.update(account, {
+    const transactionProcessed: ITransaction =
+      await this.transactionRepository.update(account, {
         ...transaction,
         status: 'processed',
-      }),
+      });
+
+    const accountUpdated: IAccount =
+      await this.accountRepository.updateAvailableBalance(
+        transaction.amount,
+        account.reference
+      );
+
+    return {
+      account: accountUpdated,
+      transaction: transactionProcessed,
     };
   }
 }
