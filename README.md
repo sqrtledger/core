@@ -140,24 +140,31 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 ## Roadmap
 
 - [ ] Account Service
-  - [ ] Implement `find` function
+  - [ ] Implement `create` Function
+  - [ ] Implement `delete` Function
+  - [ ] Implement `find` Function
 - [ ] Transaction Service
-  - [ ] Implement `complete` function
-  - [ ] Implement `create` function
-  - [ ] Implement `createProcessComplete` function
-  - [ ] Implement `createProcessCompleteMultiple` function
-  - [ ] Implement `fail` function
-  - [ ] Implement `process` function
-    - [ ] Implement unique reference constraint
+  - [ ] Implement `complete` Function
+  - [ ] Implement `create` Function
+  - [ ] Implement `createProcessComplete` Function
+  - [ ] Implement `createProcessCompleteMultiple` Function
+  - [x] Implement `fail` Function
+  - [ ] Implement `process` Function
+- [x] Account Repository using MongoDB
+  - [x] Implement `create` Function
+  - [x] Implement `delete` Function
+  - [x] Implement `find` Function
+  - [x] Implement `updateAvailableBalance` Function
+  - [x] Implement `updateBalance` Function
 - [ ] Account Repository using Redis
-  - [ ] Implement `create` function
-  - [ ] Implement `delete` function
-  - [ ] Implement `find` function
-  - [ ] Implement `updateAvailableBalance` function
-  - [ ] Implement `updateBalance` function
+  - [ ] Implement `create` Function
+  - [x] Implement `delete` Function
+  - [ ] Implement `find` Function
+  - [ ] Implement `updateAvailableBalance` Function
+  - [ ] Implement `updateBalance` Function
 - [ ] Reporting
   - [ ] Implement Account Statement
-- [ ] Check failure points
+- [ ] Check Failure Points
 
 See the [open issues](https://github.com/sqrtledger/core/issues) for a full list of proposed features (and known issues).
 

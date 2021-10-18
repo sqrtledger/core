@@ -106,32 +106,53 @@ export class TransactionService {
     reference: string,
     type: string // credit, debit
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
-    const resultCreate = await this.create(
-      accountReference,
-      amount,
-      collectionReference,
-      metadata,
-      reference,
-      type
-    );
+    let resultCreate: { account: IAccount; transaction: ITransaction } | null =
+      null;
 
     try {
-      const resultProcess = await this.process(
+      resultCreate = await this.create(
+        accountReference,
+        amount,
+        collectionReference,
+        metadata,
+        reference,
+        type
+      );
+    } catch (error) {
+      throw error;
+    }
+
+    let resultProcess: { account: IAccount; transaction: ITransaction } | null =
+      null;
+
+    try {
+      resultProcess = await this.process(
         resultCreate.account,
         resultCreate.transaction
       );
-
-      const resultComplete = await this.complete(
-        resultProcess.account,
-        resultProcess.transaction
-      );
-
-      return resultComplete;
     } catch (error) {
       await this.fail(resultCreate.account, resultCreate.transaction);
 
       throw error;
     }
+
+    let resultComplete: {
+      account: IAccount;
+      transaction: ITransaction;
+    } | null = null;
+
+    try {
+      resultComplete = await this.complete(
+        resultProcess.account,
+        resultProcess.transaction
+      );
+    } catch (error) {
+      await this.fail(resultProcess.account, resultProcess.transaction);
+
+      throw error;
+    }
+
+    return resultComplete;
   }
 
   public async createProcessCompleteMultiple(
@@ -197,10 +218,39 @@ export class TransactionService {
     account: IAccount,
     transaction: ITransaction
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
-    return {
-      account,
-      transaction,
-    };
+    if (transaction.status === 'created') {
+      const transactionFailed: ITransaction =
+        await this.transactionRepository.update(account, {
+          ...transaction,
+          status: 'failed',
+        });
+
+      return {
+        account,
+        transaction: transactionFailed,
+      };
+    }
+
+    if (transaction.status === 'processed') {
+      const transactionFailed: ITransaction =
+        await this.transactionRepository.update(account, {
+          ...transaction,
+          status: 'failed',
+        });
+
+      const accountUpdated: IAccount =
+        await this.accountRepository.updateAvailableBalance(
+          transaction.amount * -1,
+          account.reference
+        );
+
+      return {
+        account: accountUpdated,
+        transaction: transactionFailed,
+      };
+    }
+
+    throw new Error('cannot fail transaction');
   }
 
   public async process(
