@@ -192,8 +192,16 @@ export class TransactionService {
     }> = [];
 
     for (const resultCreate of resultsCreate) {
+      const account: IAccount | null = await this.accountRepository.find(
+        resultCreate.account.reference
+      );
+
+      if (!account) {
+        throw new Error();
+      }
+
       const resultProcess = await this.process(
-        resultCreate.account,
+        account,
         resultCreate.transaction
       );
 
@@ -206,8 +214,16 @@ export class TransactionService {
     }> = [];
 
     for (const resultProcess of resultsProcess) {
+      const account: IAccount | null = await this.accountRepository.find(
+        resultProcess.account.reference
+      );
+
+      if (!account) {
+        throw new Error();
+      }
+
       const resultComplete = await this.complete(
-        resultProcess.account,
+        account,
         resultProcess.transaction
       );
 
