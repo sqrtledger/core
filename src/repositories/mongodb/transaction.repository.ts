@@ -28,6 +28,9 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
             _id: 0,
             accountReference: 0,
           },
+          sort: {
+            timestamp: -1,
+          },
         }
       )
       .toArray();
