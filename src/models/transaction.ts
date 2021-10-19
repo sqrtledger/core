@@ -8,4 +8,6 @@ export interface ITransaction {
   reference: string;
 
   status: 'created' | 'processed' | 'completed' | 'failed';
+
+  timestamp: number;
 }

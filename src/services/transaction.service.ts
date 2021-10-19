@@ -62,6 +62,8 @@ export class TransactionService {
       throw new Error('invalid metadata');
     }
 
+    // TODO: Validate Metadata
+
     if (type !== 'credit' && type !== 'debit') {
       throw new Error('invalid type');
     }
@@ -94,6 +96,7 @@ export class TransactionService {
         metadata,
         reference,
         status: 'created',
+        timestamp: new Date().getTime(),
       }),
     };
   }
