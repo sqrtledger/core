@@ -76,6 +76,10 @@ export class TransactionService {
       throw new Error('account not found');
     }
 
+    if (account.status !== 'active') {
+      throw new Error('account not active');
+    }
+
     if (!account.settings.allowTransactions) {
       throw new Error('transactions not allowed');
     }
@@ -270,6 +274,22 @@ export class TransactionService {
     }
 
     throw new Error('cannot fail transaction');
+  }
+
+  public async findAll(accountReference: string): Promise<Array<ITransaction>> {
+    const account: IAccount | null = await this.accountRepository.find(
+      accountReference
+    );
+
+    if (!account) {
+      throw new Error('account not found');
+    }
+
+    if (account.status !== 'active') {
+      throw new Error('account not active');
+    }
+
+    return await this.transactionRepository.findAll(account);
   }
 
   public async process(
