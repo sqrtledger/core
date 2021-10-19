@@ -22,8 +22,10 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
       .find<ITransaction>(
         {
           accountReference: account.reference,
+          status: 'completed',
         },
         {
+          limit: 25,
           projection: {
             _id: 0,
             accountReference: 0,
