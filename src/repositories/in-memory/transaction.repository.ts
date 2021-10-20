@@ -9,7 +9,10 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     return transaction;
   }
 
-  public async findAll(account: IAccount): Promise<Array<ITransaction>> {
+  public async findAll(
+    account: IAccount,
+    filter: { [key: string]: number | string }
+  ): Promise<Array<ITransaction>> {
     return [];
   }
 

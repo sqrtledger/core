@@ -17,12 +17,16 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
     return transaction;
   }
 
-  public async findAll(account: IAccount): Promise<Array<ITransaction>> {
+  public async findAll(
+    account: IAccount,
+    filter: { [key: string]: number | string }
+  ): Promise<Array<ITransaction>> {
     return await this.collection
       .find<ITransaction>(
         {
           accountReference: account.reference,
           status: 'completed',
+          ...filter,
         },
         {
           limit: 25,
