@@ -6,9 +6,7 @@ export class AccountService {
   constructor(protected accountRepository: IAccountRepository) {}
 
   public async create(account: IAccount): Promise<IAccount> {
-    if (!AccountValidator.valid(account)) {
-      throw new Error('invalid account');
-    }
+    AccountValidator.validate(account);
 
     return await this.accountRepository.create(account);
   }
