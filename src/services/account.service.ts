@@ -1,3 +1,4 @@
+import { AccountValidator } from '..';
 import { IAccountRepository } from '../interfaces';
 import { IAccount } from '../models';
 
@@ -5,6 +6,10 @@ export class AccountService {
   constructor(protected accountRepository: IAccountRepository) {}
 
   public async create(account: IAccount): Promise<IAccount> {
+    if (!AccountValidator.valid(account)) {
+      throw new Error('invalid account');
+    }
+
     return await this.accountRepository.create(account);
   }
 
