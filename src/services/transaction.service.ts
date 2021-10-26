@@ -13,19 +13,13 @@ export class TransactionService {
     transaction: ITransaction
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (account.availableBalance < 0) {
-      await this.accountRepository.updateAvailableBalance(
-        transaction.amount * -1,
-        account.reference
-      );
+      await this.fail(account, transaction);
 
       throw new Error('insufficient available balance');
     }
 
     if (account.balance + transaction.amount < 0) {
-      await this.accountRepository.updateAvailableBalance(
-        transaction.amount * -1,
-        account.reference
-      );
+      await this.fail(account, transaction);
 
       throw new Error('insufficient balance');
     }
@@ -311,7 +305,7 @@ export class TransactionService {
 
     const accountUpdated: IAccount =
       await this.accountRepository.updateAvailableBalance(
-        transaction.amount,
+        transactionProcessed.amount,
         account.reference
       );
 

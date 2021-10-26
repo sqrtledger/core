@@ -98,32 +98,14 @@ This section should list any major frameworks/libraries used to bootstrap your p
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
-### Prerequisites
+### Installation
 
-This is an example of how to list things you need to use the software and how to install them.
+Use npm to install Sqrt Ledger Core:
 
 - npm
   ```sh
-  npm install npm@latest -g
+  npm install sqrtledger-core@latest -- save
   ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 
@@ -149,8 +131,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [ ] Implement `createProcessComplete` Function
   - [ ] Implement `createProcessCompleteMultiple` Function
   - [x] Implement `fail` Function
-  - [ ] Implement `findAll` Function
-  - [ ] Implement `process` Function
+  - [x] Implement `findAll` Function
+  - [x] Implement `process` Function
 - [x] Account Repository using MongoDB
   - [x] Implement `create` Function
   - [x] Implement `delete` Function
@@ -163,8 +145,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] Implement `find` Function
   - [ ] Implement `updateAvailableBalance` Function
   - [ ] Implement `updateBalance` Function
-- [ ] Reporting
-  - [ ] Implement Account Statement
 - [ ] Check Failure Points
 
 See the [open issues](https://github.com/sqrtledger/core/issues) for a full list of proposed features (and known issues).
