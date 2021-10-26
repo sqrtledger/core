@@ -3,7 +3,7 @@ export interface ITransaction {
 
   collectionReference: string;
 
-  metadata: { [key: string]: string };
+  metadata: { [key: string]: string | null };
 
   reference: string;
 

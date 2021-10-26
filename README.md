@@ -145,7 +145,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] Implement `find` Function
 - [ ] Transaction Service
   - [ ] Implement `complete` Function
-  - [ ] Implement `create` Function
+  - [x] Implement `create` Function
   - [ ] Implement `createProcessComplete` Function
   - [ ] Implement `createProcessCompleteMultiple` Function
   - [x] Implement `fail` Function
@@ -158,9 +158,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] Implement `updateAvailableBalance` Function
   - [x] Implement `updateBalance` Function
 - [ ] Account Repository using Redis
-  - [ ] Implement `create` Function
+  - [x] Implement `create` Function
   - [x] Implement `delete` Function
-  - [ ] Implement `find` Function
+  - [x] Implement `find` Function
   - [ ] Implement `updateAvailableBalance` Function
   - [ ] Implement `updateBalance` Function
 - [ ] Reporting

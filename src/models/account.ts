@@ -5,7 +5,7 @@ export interface IAccount {
 
   label: string;
 
-  metadata: { [key: string]: string };
+  metadata: { [key: string]: string | null };
 
   name: string;
 

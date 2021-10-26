@@ -1,6 +1,6 @@
-import { AccountValidator } from '..';
 import { IAccountRepository } from '../interfaces';
 import { IAccount } from '../models';
+import { AccountValidator } from '../validators';
 
 export class AccountService {
   constructor(protected accountRepository: IAccountRepository) {}

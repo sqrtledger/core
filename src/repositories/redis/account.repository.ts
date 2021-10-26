@@ -13,7 +13,7 @@ export class RedisAccountRepository implements IAccountRepository {
       await this.mutex.acquire(`account-${account.reference}`);
 
       if (await this.find(account.reference)) {
-        throw new Error('account exists');
+        throw new Error('account exist');
       }
 
       const json: string = JSON.stringify(account);
@@ -36,7 +36,29 @@ export class RedisAccountRepository implements IAccountRepository {
     }
   }
 
-  public async delete(reference: string): Promise<void> {}
+  public async delete(reference: string): Promise<void> {
+    try {
+      await this.mutex.acquire(`account-${reference}`);
+
+      if (await this.find(reference)) {
+        throw new Error('account does not exist');
+      }
+
+      await new Promise((resolve, reject) => {
+        this.redisClient.del(reference, (error: Error | null) => {
+          if (error) {
+            reject(error);
+
+            return;
+          }
+
+          resolve(null);
+        });
+      });
+    } finally {
+      await this.mutex.release(`account-${reference}`);
+    }
+  }
 
   public async find(reference: string): Promise<IAccount | null> {
     const json: string | null = await new Promise((resolve, reject) => {

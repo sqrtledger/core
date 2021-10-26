@@ -1,5 +1,6 @@
 import { IAccountRepository, ITransactionRepository } from '../interfaces';
 import { IAccount, ITransaction } from '../models';
+import { TransactionValidator } from '..//validators';
 
 export class TransactionService {
   constructor(
@@ -50,23 +51,15 @@ export class TransactionService {
     accountReference: string,
     amount: number,
     collectionReference: string,
-    metadata: { [key: string]: string },
+    metadata: { [key: string]: string | null },
     reference: string,
-    type: string // credit, debit
+    type: 'credit' | 'debit'
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
-    if (!amount || amount < 0) {
+    if (amount < 0) {
       throw new Error('invalid amount');
     }
 
-    if (!metadata) {
-      throw new Error('invalid metadata');
-    }
-
     // TODO: Validate Metadata
-
-    if (type !== 'credit' && type !== 'debit') {
-      throw new Error('invalid type');
-    }
 
     const account: IAccount | null = await this.accountRepository.find(
       accountReference
@@ -92,16 +85,23 @@ export class TransactionService {
       throw new Error('debit transactions not allowed');
     }
 
+    const transaction: ITransaction = {
+      amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
+      collectionReference,
+      metadata,
+      reference,
+      status: 'created',
+      timestamp: new Date().getTime(),
+    };
+
+    TransactionValidator.validate(transaction);
+
     return {
       account,
-      transaction: await this.transactionRepository.create(account, {
-        amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
-        collectionReference,
-        metadata,
-        reference,
-        status: 'created',
-        timestamp: new Date().getTime(),
-      }),
+      transaction: await this.transactionRepository.create(
+        account,
+        transaction
+      ),
     };
   }
 
@@ -109,9 +109,9 @@ export class TransactionService {
     accountReference: string,
     amount: number,
     collectionReference: string,
-    metadata: { [key: string]: string },
+    metadata: { [key: string]: string | null },
     reference: string,
-    type: string // credit, debit
+    type: 'credit' | 'debit'
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     let resultCreate: { account: IAccount; transaction: ITransaction } | null =
       null;
@@ -167,9 +167,9 @@ export class TransactionService {
       accountReference: string;
       amount: number;
       collectionReference: string;
-      metadata: { [key: string]: string };
+      metadata: { [key: string]: string | null };
       reference: string;
-      type: string; // credit, debit
+      type: 'credit' | 'debit';
     }>
   ): Promise<Array<{ account: IAccount; transaction: ITransaction }>> {
     const resultsCreate: Array<{

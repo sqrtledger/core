@@ -18,8 +18,10 @@ export class AccountValidator {
       status: Joi.string().valid('active', 'inactive').required(),
     });
 
-    if (joiObjectSchema.validate(account).error) {
-      throw new Error(joiObjectSchema.validate(account).error?.message);
+    const joiValidationResult = joiObjectSchema.validate(account);
+
+    if (joiValidationResult.error) {
+      throw new Error(joiValidationResult.error.message);
     }
   }
 }
