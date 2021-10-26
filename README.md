@@ -139,10 +139,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [ ] Account Service
-  - [ ] Implement `create` Function
-  - [ ] Implement `delete` Function
-  - [ ] Implement `find` Function
+- [x] Account Service
+  - [x] Implement `create` Function
+  - [x] Implement `delete` Function
+  - [x] Implement `find` Function
 - [ ] Transaction Service
   - [ ] Implement `complete` Function
   - [ ] Implement `create` Function
