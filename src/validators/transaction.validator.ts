@@ -4,14 +4,9 @@ import { ITransaction } from '../models';
 export class TransactionValidator {
   protected static joiObjectSchema = Joi.object({
     amount: Joi.number().required(),
-    collectionReference: Joi.string()
-      .alphanum()
-      .min(5)
-      .max(32)
-      .optional()
-      .allow(null),
+    collectionReference: Joi.string().min(5).max(32).optional().allow(null),
     metadata: Joi.object().unknown().required(),
-    reference: Joi.string().alphanum().min(5).max(32).required(),
+    reference: Joi.string().min(5).max(32).required(),
     timestamp: Joi.number().min(new Date(2000, 0, 1).getTime()).required(),
     status: Joi.string()
       .valid('created', 'processed', 'completed', 'failed')
