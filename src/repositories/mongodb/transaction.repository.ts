@@ -17,6 +17,21 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
     return transaction;
   }
 
+  public async find(reference: string): Promise<ITransaction | null> {
+    return await this.collection.findOne<ITransaction>(
+      {
+        reference,
+        status: 'completed',
+      },
+      {
+        projection: {
+          _id: 0,
+          accountReference: 0,
+        },
+      }
+    );
+  }
+
   public async findAll(
     account: IAccount,
     filter: { [key: string]: number | string }

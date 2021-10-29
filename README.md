@@ -131,6 +131,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [ ] Implement `createProcessComplete` Function
   - [ ] Implement `createProcessCompleteMultiple` Function
   - [x] Implement `fail` Function
+  - [x] Implement `find` Function
   - [x] Implement `findAll` Function
   - [x] Implement `process` Function
 - [x] Account Repository using MongoDB

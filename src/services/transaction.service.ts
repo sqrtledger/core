@@ -270,6 +270,10 @@ export class TransactionService {
     throw new Error('cannot fail transaction');
   }
 
+  public async find(reference: string): Promise<ITransaction | null> {
+    return await this.transactionRepository.find(reference);
+  }
+
   public async findAll(
     accountReference: string,
     filter: { [key: string]: number | string }
