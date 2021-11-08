@@ -7,7 +7,9 @@ export class TransactionValidator {
     collectionReference: Joi.string().min(5).max(32).optional().allow(null),
     metadata: Joi.object().unknown().required(),
     reference: Joi.string().min(5).max(32).required(),
-    timestamp: Joi.number().min(new Date(2000, 0, 1).getTime()).required(),
+    timestamp: Joi.number()
+      .min(new Date().getTime() - 31536000000 * 10)
+      .required(),
     status: Joi.string()
       .valid('created', 'processed', 'completed', 'failed')
       .required(),

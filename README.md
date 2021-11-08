@@ -126,7 +126,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] Implement `delete` Function
   - [x] Implement `find` Function
 - [ ] Transaction Service
-  - [ ] Implement `complete` Function
+  - [x] Implement `complete` Function
   - [x] Implement `create` Function
   - [ ] Implement `createProcessComplete` Function
   - [ ] Implement `createProcessCompleteMultiple` Function

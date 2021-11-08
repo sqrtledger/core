@@ -55,6 +55,17 @@ export class TransactionService {
 
     // TODO: Validate Metadata
 
+    const transaction: ITransaction = {
+      amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
+      collectionReference,
+      metadata,
+      reference,
+      status: 'created',
+      timestamp: new Date().getTime(),
+    };
+
+    TransactionValidator.validate(transaction);
+
     const account: IAccount | null = await this.accountRepository.find(
       accountReference
     );
@@ -71,24 +82,13 @@ export class TransactionService {
       throw new Error('transactions not allowed');
     }
 
-    if (type === 'credit' && !account.settings.allowCreditTransactions) {
+    if (transaction.amount > 0 && !account.settings.allowCreditTransactions) {
       throw new Error('credit transactions not allowed');
     }
 
-    if (type === 'debit' && !account.settings.allowDebitTransactions) {
+    if (transaction.amount < 0 && !account.settings.allowDebitTransactions) {
       throw new Error('debit transactions not allowed');
     }
-
-    const transaction: ITransaction = {
-      amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
-      collectionReference,
-      metadata,
-      reference,
-      status: 'created',
-      timestamp: new Date().getTime(),
-    };
-
-    TransactionValidator.validate(transaction);
 
     return {
       account,
