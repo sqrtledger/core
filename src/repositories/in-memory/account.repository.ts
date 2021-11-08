@@ -4,7 +4,10 @@ import { IAccount } from '../../models';
 export class InMemoryAccountRepository implements IAccountRepository {
   protected accounts: Array<IAccount> = [];
 
-  public async create(account: IAccount): Promise<IAccount> {
+  public async create(
+    account: IAccount,
+    tenantId: string | null
+  ): Promise<IAccount> {
     this.accounts.push({
       ...account,
     });
@@ -12,9 +15,15 @@ export class InMemoryAccountRepository implements IAccountRepository {
     return account;
   }
 
-  public async delete(reference: string): Promise<void> {}
+  public async delete(
+    reference: string,
+    tenantId: string | null
+  ): Promise<void> {}
 
-  public async find(reference: string): Promise<IAccount | null> {
+  public async find(
+    reference: string,
+    tenantId: string | null
+  ): Promise<IAccount | null> {
     return (
       this.accounts.find((x: IAccount) => x.reference === reference) || null
     );
@@ -22,7 +31,8 @@ export class InMemoryAccountRepository implements IAccountRepository {
 
   public async updateAvailableBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const account: IAccount | null =
       this.accounts.find((x: IAccount) => x.reference === reference) || null;
@@ -38,7 +48,8 @@ export class InMemoryAccountRepository implements IAccountRepository {
 
   public async updateBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const account: IAccount | null =
       this.accounts.find((x: IAccount) => x.reference === reference) || null;

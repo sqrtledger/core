@@ -33,25 +33,31 @@ import {
     transactionRepository
   );
 
-  const account: IAccount | null = await accountRepository.find('827977177');
+  const account: IAccount | null = await accountRepository.find(
+    '827977177',
+    null
+  );
 
   if (!account) {
-    await accountRepository.create({
-      availableBalance: 1000,
-      balance: 1000,
-      label: 'Current Account',
-      metadata: {
-        country: 'Spain',
+    await accountRepository.create(
+      {
+        availableBalance: 1000,
+        balance: 1000,
+        label: 'Current Account',
+        metadata: {
+          country: 'Spain',
+        },
+        name: 'Current Account',
+        reference: '827977177',
+        settings: {
+          allowCreditTransactions: true,
+          allowDebitTransactions: true,
+          allowTransactions: true,
+        },
+        status: 'active',
       },
-      name: 'Current Account',
-      reference: '827977177',
-      settings: {
-        allowCreditTransactions: true,
-        allowDebitTransactions: true,
-        allowTransactions: true,
-      },
-      status: 'active',
-    });
+      null
+    );
   }
 
   const timestamp1 = new Date().getTime();
@@ -79,7 +85,7 @@ import {
 
   console.log(n / ((timestamp2 - timestamp1) / 1000));
 
-  console.log(await accountRepository.find('827977177'));
+  console.log(await accountRepository.find('827977177', null));
 
   await mongoClient.close();
 })();

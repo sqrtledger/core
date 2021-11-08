@@ -10,7 +10,8 @@ export class TransactionService {
 
   public async complete(
     account: IAccount,
-    transaction: ITransaction
+    transaction: ITransaction,
+    tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (account.availableBalance < 0) {
       await this.fail(account, transaction);
@@ -25,14 +26,19 @@ export class TransactionService {
     }
 
     const transactionCompleted: ITransaction =
-      await this.transactionRepository.update(account, {
-        ...transaction,
-        status: 'completed',
-      });
+      await this.transactionRepository.update(
+        account,
+        {
+          ...transaction,
+          status: 'completed',
+        },
+        tenantId
+      );
 
     const accountUpdated: IAccount = await this.accountRepository.updateBalance(
       transaction.amount,
-      account.reference
+      account.reference,
+      tenantId
     );
 
     return {
@@ -47,7 +53,8 @@ export class TransactionService {
     collectionReference: string,
     metadata: { [key: string]: string | null },
     reference: string,
-    type: 'credit' | 'debit'
+    type: 'credit' | 'debit',
+    tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (amount < 0) {
       throw new Error('invalid amount');
@@ -67,7 +74,8 @@ export class TransactionService {
     TransactionValidator.validate(transaction);
 
     const account: IAccount | null = await this.accountRepository.find(
-      accountReference
+      accountReference,
+      tenantId
     );
 
     if (!account) {
@@ -94,7 +102,8 @@ export class TransactionService {
       account,
       transaction: await this.transactionRepository.create(
         account,
-        transaction
+        transaction,
+        tenantId
       ),
     };
   }
@@ -105,7 +114,8 @@ export class TransactionService {
     collectionReference: string,
     metadata: { [key: string]: string | null },
     reference: string,
-    type: 'credit' | 'debit'
+    type: 'credit' | 'debit',
+    tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     let resultCreate: { account: IAccount; transaction: ITransaction } | null =
       null;
@@ -164,7 +174,8 @@ export class TransactionService {
       metadata: { [key: string]: string | null };
       reference: string;
       type: 'credit' | 'debit';
-    }>
+    }>,
+    tenantId: string | null = null
   ): Promise<Array<{ account: IAccount; transaction: ITransaction }>> {
     const resultsCreate: Array<{
       account: IAccount;
@@ -191,7 +202,8 @@ export class TransactionService {
 
     for (const resultCreate of resultsCreate) {
       const account: IAccount | null = await this.accountRepository.find(
-        resultCreate.account.reference
+        resultCreate.account.reference,
+        tenantId
       );
 
       if (!account) {
@@ -213,7 +225,8 @@ export class TransactionService {
 
     for (const resultProcess of resultsProcess) {
       const account: IAccount | null = await this.accountRepository.find(
-        resultProcess.account.reference
+        resultProcess.account.reference,
+        tenantId
       );
 
       if (!account) {
@@ -233,14 +246,19 @@ export class TransactionService {
 
   public async fail(
     account: IAccount,
-    transaction: ITransaction
+    transaction: ITransaction,
+    tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (transaction.status === 'created') {
       const transactionFailed: ITransaction =
-        await this.transactionRepository.update(account, {
-          ...transaction,
-          status: 'failed',
-        });
+        await this.transactionRepository.update(
+          account,
+          {
+            ...transaction,
+            status: 'failed',
+          },
+          tenantId
+        );
 
       return {
         account,
@@ -250,15 +268,20 @@ export class TransactionService {
 
     if (transaction.status === 'processed') {
       const transactionFailed: ITransaction =
-        await this.transactionRepository.update(account, {
-          ...transaction,
-          status: 'failed',
-        });
+        await this.transactionRepository.update(
+          account,
+          {
+            ...transaction,
+            status: 'failed',
+          },
+          tenantId
+        );
 
       const accountUpdated: IAccount =
         await this.accountRepository.updateAvailableBalance(
           transaction.amount * -1,
-          account.reference
+          account.reference,
+          tenantId
         );
 
       return {
@@ -270,16 +293,21 @@ export class TransactionService {
     throw new Error('cannot fail transaction');
   }
 
-  public async find(reference: string): Promise<ITransaction | null> {
-    return await this.transactionRepository.find(reference);
+  public async find(
+    reference: string,
+    tenantId: string | null = null
+  ): Promise<ITransaction | null> {
+    return await this.transactionRepository.find(reference, tenantId);
   }
 
   public async findAll(
     accountReference: string,
-    filter: { [key: string]: number | string }
+    filter: { [key: string]: number | string },
+    tenantId: string | null = null
   ): Promise<Array<ITransaction>> {
     const account: IAccount | null = await this.accountRepository.find(
-      accountReference
+      accountReference,
+      tenantId
     );
 
     if (!account) {
@@ -290,27 +318,33 @@ export class TransactionService {
       throw new Error('account not active');
     }
 
-    return await this.transactionRepository.findAll(account, filter);
+    return await this.transactionRepository.findAll(account, filter, tenantId);
   }
 
   public async process(
     account: IAccount,
-    transaction: ITransaction
+    transaction: ITransaction,
+    tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (account.availableBalance + transaction.amount < 0) {
       throw new Error('insufficient available balance');
     }
 
     const transactionProcessed: ITransaction =
-      await this.transactionRepository.update(account, {
-        ...transaction,
-        status: 'processed',
-      });
+      await this.transactionRepository.update(
+        account,
+        {
+          ...transaction,
+          status: 'processed',
+        },
+        tenantId
+      );
 
     const accountUpdated: IAccount =
       await this.accountRepository.updateAvailableBalance(
         transactionProcessed.amount,
-        account.reference
+        account.reference,
+        tenantId
       );
 
     return {

@@ -7,7 +7,8 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
 
   public async create(
     account: IAccount,
-    transaction: ITransaction
+    transaction: ITransaction,
+    tenantId: string | null
   ): Promise<ITransaction> {
     await this.collection.insertOne({
       ...transaction,
@@ -17,7 +18,10 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
     return transaction;
   }
 
-  public async find(reference: string): Promise<ITransaction | null> {
+  public async find(
+    reference: string,
+    tenantId: string | null
+  ): Promise<ITransaction | null> {
     return await this.collection.findOne<ITransaction>(
       {
         reference,
@@ -34,7 +38,8 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
 
   public async findAll(
     account: IAccount,
-    filter: { [key: string]: number | string }
+    filter: { [key: string]: number | string },
+    tenantId: string | null
   ): Promise<Array<ITransaction>> {
     return await this.collection
       .find<ITransaction>(
@@ -59,7 +64,8 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
 
   public async update(
     account: IAccount,
-    transaction: ITransaction
+    transaction: ITransaction,
+    tenantId: string | null
   ): Promise<ITransaction> {
     await this.collection.updateOne(
       {

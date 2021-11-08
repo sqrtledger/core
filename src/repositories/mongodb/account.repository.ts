@@ -5,7 +5,10 @@ import { IAccount } from '../../models';
 export class MongoDbAccountRepository implements IAccountRepository {
   constructor(protected collection: MongoDb.Collection) {}
 
-  public async create(account: IAccount): Promise<IAccount> {
+  public async create(
+    account: IAccount,
+    tenantId: string | null
+  ): Promise<IAccount> {
     const insertOneResult = await this.collection.insertOne({
       ...account,
     });
@@ -13,13 +16,19 @@ export class MongoDbAccountRepository implements IAccountRepository {
     return account;
   }
 
-  public async delete(reference: string): Promise<void> {
+  public async delete(
+    reference: string,
+    tenantId: string | null
+  ): Promise<void> {
     await this.collection.deleteOne({
       reference,
     });
   }
 
-  public async find(reference: string): Promise<IAccount | null> {
+  public async find(
+    reference: string,
+    tenantId: string | null
+  ): Promise<IAccount | null> {
     return await this.collection.findOne<IAccount>(
       {
         reference,
@@ -34,7 +43,8 @@ export class MongoDbAccountRepository implements IAccountRepository {
 
   public async updateAvailableBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const updateResult = await this.collection.updateOne(
       {
@@ -55,7 +65,7 @@ export class MongoDbAccountRepository implements IAccountRepository {
       throw new Error('TODO');
     }
 
-    const account: IAccount | null = await this.find(reference);
+    const account: IAccount | null = await this.find(reference, tenantId);
 
     if (!account) {
       throw new Error('TODO');
@@ -66,7 +76,8 @@ export class MongoDbAccountRepository implements IAccountRepository {
 
   public async updateBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const updateResult = await this.collection.updateOne(
       {
@@ -87,7 +98,7 @@ export class MongoDbAccountRepository implements IAccountRepository {
       throw new Error('TODO');
     }
 
-    const account: IAccount | null = await this.find(reference);
+    const account: IAccount | null = await this.find(reference, tenantId);
 
     if (!account) {
       throw new Error('TODO');

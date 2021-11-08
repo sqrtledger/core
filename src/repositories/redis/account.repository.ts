@@ -8,11 +8,14 @@ export class RedisAccountRepository implements IAccountRepository {
     protected redisClient: Redis.RedisClient
   ) {}
 
-  public async create(account: IAccount): Promise<IAccount> {
+  public async create(
+    account: IAccount,
+    tenantId: string | null
+  ): Promise<IAccount> {
     try {
       await this.mutex.acquire(`account-${account.reference}`);
 
-      if (await this.find(account.reference)) {
+      if (await this.find(account.reference, tenantId)) {
         throw new Error('account exist');
       }
 
@@ -36,11 +39,14 @@ export class RedisAccountRepository implements IAccountRepository {
     }
   }
 
-  public async delete(reference: string): Promise<void> {
+  public async delete(
+    reference: string,
+    tenantId: string | null
+  ): Promise<void> {
     try {
       await this.mutex.acquire(`account-${reference}`);
 
-      if (await this.find(reference)) {
+      if (await this.find(reference, tenantId)) {
         throw new Error('account does not exist');
       }
 
@@ -60,7 +66,10 @@ export class RedisAccountRepository implements IAccountRepository {
     }
   }
 
-  public async find(reference: string): Promise<IAccount | null> {
+  public async find(
+    reference: string,
+    tenantId: string | null
+  ): Promise<IAccount | null> {
     const json: string | null = await new Promise((resolve, reject) => {
       this.redisClient.get(
         `account-${reference}`,
@@ -85,7 +94,8 @@ export class RedisAccountRepository implements IAccountRepository {
 
   public async updateAvailableBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const json: string | null = await new Promise((resolve, reject) => {
       this.redisClient.get(
@@ -115,7 +125,8 @@ export class RedisAccountRepository implements IAccountRepository {
 
   public async updateBalance(
     amount: number,
-    reference: string
+    reference: string,
+    tenantId: string | null
   ): Promise<IAccount> {
     const json: string | null = await new Promise((resolve, reject) => {
       this.redisClient.get(
