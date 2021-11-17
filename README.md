@@ -5,13 +5,13 @@
 ![Stargazers](https://img.shields.io/github/stars/sqrtledger/core.svg?style=for-the-badge)
 [![Issues](https://img.shields.io/github/issues/sqrtledger/core.svg?style=for-the-badge)](https://github.com/sqrtledger/core/issues)
 ![MIT License](https://img.shields.io/github/license/sqrtledger/core.svg?style=for-the-badge)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://linkedin.com/in/hirebarend)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/company/sqrtlabs)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/sqrtledger/core">
-    <img src="images/icon.png" alt="Icon" width="128" height="128">
+    <img src="images/icon.png" alt="Icon" width="128" height="128" />
   </a>
 
   <h3 align="center">Sqrt Ledger Core</h3>
@@ -19,14 +19,9 @@
   <p align="center">
     The Open-Source API-First Ledger
     <br />
-    <a href="https://github.com/sqrtledger/core"><strong>Explore the docs</strong></a>
-    <br />
-    <br />
-    <a href="https://sqrtledger.com">View Demo</a>
-    ·
-    <a href="https://github.com/sqrtledger/core/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/sqrtledger/core/issues">Request Feature</a>
+    <a href="https://github.com/sqrtledger/core">
+      <strong>Explore the docs</strong>
+    </a>
   </p>
 </div>
 
@@ -78,25 +73,16 @@ Use the `BLANK_README.md` to get started.
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-- [Next.js](https://nextjs.org/)
-- [React.js](https://reactjs.org/)
-- [Vue.js](https://vuejs.org/)
-- [Angular](https://angular.io/)
-- [Svelte](https://svelte.dev/)
-- [Laravel](https://laravel.com)
-- [Bootstrap](https://getbootstrap.com)
-- [JQuery](https://jquery.com)
+- [Microsoft Azure](https://azure.microsoft.com/en-us)
+- [Node.js](https://nodejs.org/en)
+- [MongoDB](https://www.mongodb.com)
+- [Redis](https://redis.io)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
@@ -111,9 +97,19 @@ Use npm to install Sqrt Ledger Core:
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+```typescript
+import { 
+  TransactionService,
+  IAccountRepository,
+  InMemoryAccountRepository,
+  InMemoryTransactionRepository,
+} from 'sqrtledger-core';
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+const accountRepository: IAccountRepository = new InMemoryAccountRepository();
+const transactionRepository: ITransactionRepository = new InMemoryTransactionRepository();
+
+const transactionService: TransactionService = new TransactionService(accountRepository, transactionRepository);
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -128,7 +124,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Transaction Service
   - [x] Implement `complete` Function
   - [x] Implement `create` Function
-  - [ ] Implement `createProcessComplete` Function
+  - [x] Implement `createProcessComplete` Function
   - [ ] Implement `createProcessCompleteMultiple` Function
   - [x] Implement `fail` Function
   - [x] Implement `find` Function
@@ -144,9 +140,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
   - [x] Implement `create` Function
   - [x] Implement `delete` Function
   - [x] Implement `find` Function
-  - [ ] Implement `updateAvailableBalance` Function
-  - [ ] Implement `updateBalance` Function
-- [ ] Check Failure Points
+  - [x] Implement `updateAvailableBalance` Function
+  - [x] Implement `updateBalance` Function
 
 See the [open issues](https://github.com/sqrtledger/core/issues) for a full list of proposed features (and known issues).
 
@@ -163,7 +158,7 @@ Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/amazing-feature`)
-3. Commit your Changes (`git commit -m 'Add some amazing feature'`)
+3. Commit your Changes (`git commit -m 'Add amazing feature'`)
 4. Push to the Branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 

@@ -200,22 +200,28 @@ export class TransactionService {
       transaction: ITransaction;
     }> = [];
 
-    for (const resultCreate of resultsCreate) {
-      const account: IAccount | null = await this.accountRepository.find(
-        resultCreate.account.reference,
-        tenantId
-      );
+    try {
+      for (const resultCreate of resultsCreate) {
+        const account: IAccount | null = await this.accountRepository.find(
+          resultCreate.account.reference,
+          tenantId
+        );
 
-      if (!account) {
-        throw new Error();
+        if (!account) {
+          throw new Error();
+        }
+
+        const resultProcess = await this.process(
+          account,
+          resultCreate.transaction
+        );
+
+        resultsProcess.push(resultProcess);
       }
+    } catch (error) {
+      // TODO
 
-      const resultProcess = await this.process(
-        account,
-        resultCreate.transaction
-      );
-
-      resultsProcess.push(resultProcess);
+      throw error;
     }
 
     const resultsComplete: Array<{
@@ -223,22 +229,28 @@ export class TransactionService {
       transaction: ITransaction;
     }> = [];
 
-    for (const resultProcess of resultsProcess) {
-      const account: IAccount | null = await this.accountRepository.find(
-        resultProcess.account.reference,
-        tenantId
-      );
+    try {
+      for (const resultProcess of resultsProcess) {
+        const account: IAccount | null = await this.accountRepository.find(
+          resultProcess.account.reference,
+          tenantId
+        );
 
-      if (!account) {
-        throw new Error();
+        if (!account) {
+          throw new Error();
+        }
+
+        const resultComplete = await this.complete(
+          account,
+          resultProcess.transaction
+        );
+
+        resultsComplete.push(resultComplete);
       }
+    } catch (error) {
+      // TODO
 
-      const resultComplete = await this.complete(
-        account,
-        resultProcess.transaction
-      );
-
-      resultsComplete.push(resultComplete);
+      throw error;
     }
 
     return resultsComplete;

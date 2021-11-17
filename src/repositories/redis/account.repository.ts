@@ -19,18 +19,20 @@ export class RedisAccountRepository implements IAccountRepository {
         throw new Error('account exist');
       }
 
-      const json: string = JSON.stringify(account);
-
       await new Promise((resolve, reject) => {
-        this.redisClient.set(account.reference, json, (error: Error | null) => {
-          if (error) {
-            reject(error);
+        this.redisClient.set(
+          account.reference,
+          JSON.stringify(account),
+          (error: Error | null) => {
+            if (error) {
+              reject(error);
 
-            return;
+              return;
+            }
+
+            resolve(null);
           }
-
-          resolve(null);
-        });
+        );
       });
 
       return account;
@@ -97,30 +99,52 @@ export class RedisAccountRepository implements IAccountRepository {
     reference: string,
     tenantId: string | null
   ): Promise<IAccount> {
-    const json: string | null = await new Promise((resolve, reject) => {
-      this.redisClient.get(
-        `account-${reference}`,
-        (error: Error | null, reply: string | null) => {
-          if (error) {
-            reject(error);
+    try {
+      await this.mutex.acquire(`account-${reference}`);
 
-            return;
+      let json: string | null = await new Promise((resolve, reject) => {
+        this.redisClient.get(
+          `account-${reference}`,
+          (error: Error | null, reply: string | null) => {
+            if (error) {
+              reject(error);
+
+              return;
+            }
+
+            resolve(reply);
           }
+        );
+      });
 
-          resolve(reply);
-        }
-      );
-    });
+      if (!json) {
+        throw new Error('account not found');
+      }
 
-    if (!json) {
-      throw new Error('account not found');
+      const account: IAccount = JSON.parse(json);
+
+      account.availableBalance += amount;
+
+      await new Promise((resolve, reject) => {
+        this.redisClient.set(
+          account.reference,
+          JSON.stringify(account),
+          (error: Error | null) => {
+            if (error) {
+              reject(error);
+
+              return;
+            }
+
+            resolve(null);
+          }
+        );
+      });
+
+      return account;
+    } finally {
+      await this.mutex.release(`account-${reference}`);
     }
-
-    // availableBalance
-
-    const account: IAccount = JSON.parse(json);
-
-    return account;
   }
 
   public async updateBalance(
@@ -128,29 +152,51 @@ export class RedisAccountRepository implements IAccountRepository {
     reference: string,
     tenantId: string | null
   ): Promise<IAccount> {
-    const json: string | null = await new Promise((resolve, reject) => {
-      this.redisClient.get(
-        `account-${reference}`,
-        (error: Error | null, reply: string | null) => {
-          if (error) {
-            reject(error);
+    try {
+      await this.mutex.acquire(`account-${reference}`);
 
-            return;
+      let json: string | null = await new Promise((resolve, reject) => {
+        this.redisClient.get(
+          `account-${reference}`,
+          (error: Error | null, reply: string | null) => {
+            if (error) {
+              reject(error);
+
+              return;
+            }
+
+            resolve(reply);
           }
+        );
+      });
 
-          resolve(reply);
-        }
-      );
-    });
+      if (!json) {
+        throw new Error('account not found');
+      }
 
-    if (!json) {
-      throw new Error('account not found');
+      const account: IAccount = JSON.parse(json);
+
+      account.balance += amount;
+
+      await new Promise((resolve, reject) => {
+        this.redisClient.set(
+          account.reference,
+          JSON.stringify(account),
+          (error: Error | null) => {
+            if (error) {
+              reject(error);
+
+              return;
+            }
+
+            resolve(null);
+          }
+        );
+      });
+
+      return account;
+    } finally {
+      await this.mutex.release(`account-${reference}`);
     }
-
-    // balance
-
-    const account: IAccount = JSON.parse(json);
-
-    return account;
   }
 }
