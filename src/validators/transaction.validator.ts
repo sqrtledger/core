@@ -4,7 +4,10 @@ import { ITransaction } from '../models';
 export class TransactionValidator {
   protected static joiObjectSchema = Joi.object({
     amount: Joi.number().required(),
+    account: Joi.object().unknown().required(), // TODO
+    card: Joi.object().unknown().optional().allow(null), // TODO
     collectionReference: Joi.string().min(5).max(32).optional().allow(null),
+    customer: Joi.object().unknown().optional().allow(null), // TODO
     metadata: Joi.object().unknown().required(),
     reference: Joi.string().min(5).max(32).required(),
     timestamp: Joi.number()

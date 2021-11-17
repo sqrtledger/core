@@ -1,6 +1,6 @@
 import { IAccountRepository, ITransactionRepository } from '../interfaces';
-import { IAccount, ITransaction } from '../models';
-import { TransactionValidator } from '..//validators';
+import { IAccount, ICard, ICustomerView, ITransaction } from '../models';
+import { TransactionValidator } from '../validators';
 
 export class TransactionService {
   constructor(
@@ -50,7 +50,9 @@ export class TransactionService {
   public async create(
     accountReference: string,
     amount: number,
+    card: ICard | null,
     collectionReference: string,
+    customer: ICustomerView | null,
     metadata: { [key: string]: string | null },
     reference: string,
     type: 'credit' | 'debit',
@@ -62,17 +64,6 @@ export class TransactionService {
 
     // TODO: Validate Metadata
 
-    const transaction: ITransaction = {
-      amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
-      collectionReference,
-      metadata,
-      reference,
-      status: 'created',
-      timestamp: new Date().getTime(),
-    };
-
-    TransactionValidator.validate(transaction);
-
     const account: IAccount | null = await this.accountRepository.find(
       accountReference,
       tenantId
@@ -81,6 +72,20 @@ export class TransactionService {
     if (!account) {
       throw new Error('account not found');
     }
+
+    const transaction: ITransaction = {
+      amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
+      account,
+      card,
+      collectionReference,
+      customer,
+      metadata,
+      reference,
+      status: 'created',
+      timestamp: new Date().getTime(),
+    };
+
+    TransactionValidator.validate(transaction);
 
     if (account.status !== 'active') {
       throw new Error('account not active');
@@ -111,7 +116,9 @@ export class TransactionService {
   public async createProcessComplete(
     accountReference: string,
     amount: number,
+    card: ICard | null,
     collectionReference: string,
+    customer: ICustomerView | null,
     metadata: { [key: string]: string | null },
     reference: string,
     type: 'credit' | 'debit',
@@ -124,7 +131,9 @@ export class TransactionService {
       resultCreate = await this.create(
         accountReference,
         amount,
+        card,
         collectionReference,
+        customer,
         metadata,
         reference,
         type
@@ -170,7 +179,9 @@ export class TransactionService {
     requests: Array<{
       accountReference: string;
       amount: number;
+      card: ICard | null;
       collectionReference: string;
+      customer: ICustomerView | null;
       metadata: { [key: string]: string | null };
       reference: string;
       type: 'credit' | 'debit';
@@ -186,7 +197,9 @@ export class TransactionService {
       const resultCreate = await this.create(
         request.accountReference,
         request.amount,
+        request.card,
         request.collectionReference,
+        request.customer,
         request.metadata,
         request.reference,
         request.type
