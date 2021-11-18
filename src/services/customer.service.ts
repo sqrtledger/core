@@ -11,6 +11,22 @@ export class CustomerService {
     return await this.customerRepository.create(customer, tenantId);
   }
 
+  public async createOrUpdate(
+    customer: ICustomer,
+    tenantId: string | null = null
+  ): Promise<ICustomer> {
+    const existingCustomer: ICustomer | null = await this.find(
+      customer.emailAddress,
+      tenantId
+    );
+
+    if (existingCustomer) {
+      return await this.customerRepository.update(customer, tenantId);
+    }
+
+    return await this.customerRepository.create(customer, tenantId);
+  }
+
   public async find(
     emailAddress: string,
     tenantId: string | null = null

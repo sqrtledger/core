@@ -24,4 +24,11 @@ export class InMemoryCustomerRepository implements ICustomerRepository {
       null
     );
   }
+
+  public async update(
+    customer: ICustomer,
+    tenantId: string | null
+  ): Promise<ICustomer> {
+    return customer;
+  }
 }
