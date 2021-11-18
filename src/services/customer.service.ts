@@ -1,8 +1,11 @@
-import { ICustomerRepository } from '../interfaces';
-import { ICustomer } from '../models';
+import { ICustomerRepository, ITransactionRepository } from '../interfaces';
+import { ICustomer, ICustomerView } from '../models';
 
 export class CustomerService {
-  constructor(protected customerRepository: ICustomerRepository) {}
+  constructor(
+    protected customerRepository: ICustomerRepository,
+    protected transactionRepository: ITransactionRepository
+  ) {}
 
   public async create(
     customer: ICustomer,
@@ -32,5 +35,15 @@ export class CustomerService {
     tenantId: string | null = null
   ): Promise<ICustomer | null> {
     return await this.customerRepository.find(emailAddress, tenantId);
+  }
+
+  public async findAll(
+    accountReference: string,
+    tenantId: string | null = null
+  ): Promise<Array<ICustomerView> | null> {
+    return await this.transactionRepository.findAllCustomers(
+      accountReference,
+      tenantId
+    );
   }
 }

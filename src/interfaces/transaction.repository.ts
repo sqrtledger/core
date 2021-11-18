@@ -1,4 +1,4 @@
-import { IAccount, ITransaction } from '../models';
+import { IAccount, ICustomerView, ITransaction } from '../models';
 
 export interface ITransactionRepository {
   create(
@@ -17,6 +17,11 @@ export interface ITransactionRepository {
     filter: { [key: string]: number | string },
     tenantId: string | null
   ): Promise<Array<ITransaction>>;
+
+  findAllCustomers(
+    accountReference: string,
+    tenantId: string | null
+  ): Promise<Array<ICustomerView>>;
 
   update(
     account: IAccount,

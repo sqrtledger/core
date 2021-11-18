@@ -1,6 +1,6 @@
 import * as MongoDb from 'mongodb';
 import { ITransactionRepository } from '../../interfaces';
-import { IAccount, ITransaction } from '../../models';
+import { IAccount, ICustomerView, ITransaction } from '../../models';
 
 export class MongoDbTransactionRepository implements ITransactionRepository {
   constructor(protected collection: MongoDb.Collection) {}
@@ -60,6 +60,33 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
         }
       )
       .toArray();
+  }
+
+  public async findAllCustomers(
+    accountReference: string,
+    tenantId: string | null
+  ): Promise<Array<ICustomerView>> {
+    const result = await this.collection
+      .aggregate([
+        {
+          $match: {
+            accountReference,
+            status: 'completed',
+          },
+        },
+        {
+          $group: {
+            _id: {
+              emailAddress: '$customer.emailAddress',
+              metadata: '$customer.metadata',
+              name: '$customer.name',
+            },
+          },
+        },
+      ])
+      .toArray();
+
+    return result.map((x) => x._id);
   }
 
   public async update(

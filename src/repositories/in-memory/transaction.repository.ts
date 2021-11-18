@@ -1,5 +1,5 @@
 import { ITransactionRepository } from '../../interfaces';
-import { IAccount, ITransaction } from '../../models';
+import { IAccount, ICustomerView, ITransaction } from '../../models';
 
 export class InMemoryTransactionRepository implements ITransactionRepository {
   public async create(
@@ -22,6 +22,13 @@ export class InMemoryTransactionRepository implements ITransactionRepository {
     filter: { [key: string]: number | string },
     tenantId: string | null
   ): Promise<Array<ITransaction>> {
+    return [];
+  }
+
+  public async findAllCustomers(
+    accountReference: string,
+    tenantId: string | null
+  ): Promise<Array<ICustomerView>> {
     return [];
   }
 
