@@ -7,7 +7,6 @@
 ![MIT License](https://img.shields.io/github/license/sqrtledger/core.svg?style=for-the-badge)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/company/sqrtlabs)
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/sqrtledger/core">
@@ -25,7 +24,6 @@
   </p>
 </div>
 
-<!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -50,8 +48,6 @@
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
-
-<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
@@ -80,8 +76,6 @@ Use the `BLANK_README.md` to get started.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
-
 ## Getting Started
 
 ### Installation
@@ -93,12 +87,10 @@ Use npm to install Sqrt Ledger Core:
   npm install sqrtledger-core@latest -- save
   ```
 
-<!-- USAGE EXAMPLES -->
-
 ## Usage
 
 ```typescript
-import { 
+import {
   TransactionService,
   IAccountRepository,
   InMemoryAccountRepository,
@@ -106,14 +98,64 @@ import {
 } from 'sqrtledger-core';
 
 const accountRepository: IAccountRepository = new InMemoryAccountRepository();
-const transactionRepository: ITransactionRepository = new InMemoryTransactionRepository();
+const transactionRepository: ITransactionRepository =
+  new InMemoryTransactionRepository();
 
-const transactionService: TransactionService = new TransactionService(accountRepository, transactionRepository);
+const transactionService: TransactionService = new TransactionService(
+  accountRepository,
+  transactionRepository
+);
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- ROADMAP -->
+## Models
+
+### Account View
+
+```json
+{
+  "label": "All In One Current Account",
+  "metadata": {
+    "issuer": "Banco Santander"
+  },
+  "name": "Current Account",
+  "reference": "EVoiVSfB"
+}
+```
+
+### Account
+
+```json
+{
+  "availableBalance": 10000,
+  "balance": 10000,
+  "label": "All In One Current Account",
+  "metadata": {
+    "issuer": "Banco Santander"
+  },
+  "name": "Current Account",
+  "reference": "EVoiVSfB",
+  "settings": {
+    "allowTransactions": true,
+    "allowCreditTransactions": true,
+    "allowDebitTransactions": true
+  },
+  "status": "active"
+}
+```
+
+### Card
+
+```json
+{
+  "authorizationCode": "AUTH_gltaab334m",
+  "bankIdentificationNumber": "408408",
+  "expirationMonth": "12",
+  "expirationYear": "2030",
+  "last4Digits": "4081"
+}
+```
 
 ## Roadmap
 
@@ -121,6 +163,11 @@ const transactionService: TransactionService = new TransactionService(accountRep
   - [x] Implement `create` Function
   - [x] Implement `delete` Function
   - [x] Implement `find` Function
+- [x] Customer Service
+  - [x] Implement `create` Function
+  - [x] Implement `createOrUpdate` Function
+  - [x] Implement `find` Function
+  - [x] Implement `findAll` Function
 - [ ] Transaction Service
   - [x] Implement `complete` Function
   - [x] Implement `create` Function
@@ -147,8 +194,6 @@ See the [open issues](https://github.com/sqrtledger/core/issues) for a full list
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- CONTRIBUTING -->
-
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -164,15 +209,11 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- LICENSE -->
-
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- CONTACT -->
 
 ## Contact
 
