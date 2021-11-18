@@ -75,7 +75,12 @@ export class TransactionService {
 
     const transaction: ITransaction = {
       amount: type === 'credit' ? amount : type === 'debit' ? amount * -1 : 0,
-      account,
+      account: {
+        label: account.label,
+        metadata: account.metadata,
+        name: account.name,
+        reference: account.reference,
+      },
       card,
       collectionReference,
       customer,

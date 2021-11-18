@@ -1,11 +1,11 @@
-import { IAccount } from './account';
+import { IAccountView } from './account-view';
 import { ICard } from './card';
 import { ICustomerView } from './customer-view';
 
 export interface ITransaction {
   amount: number;
 
-  account: IAccount;
+  account: IAccountView;
 
   card: ICard | null;
 
