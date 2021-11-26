@@ -1,11 +1,14 @@
 import { IAccountRepository, IMutex } from '../../interfaces';
 import { IAccount } from '../../models';
-import * as Redis from 'redis';
 
 export class RedisAccountRepository implements IAccountRepository {
   constructor(
     protected mutex: IMutex,
-    protected redisClient: Redis.RedisClient
+    protected redisClient: {
+      del: (key: string) => Promise<void>;
+      get: (key: string) => Promise<string | null>;
+      set: (key: string, value: string) => Promise<void>;
+    }
   ) {}
 
   public async create(
@@ -19,21 +22,10 @@ export class RedisAccountRepository implements IAccountRepository {
         throw new Error('account exist');
       }
 
-      await new Promise((resolve, reject) => {
-        this.redisClient.set(
-          account.reference,
-          JSON.stringify(account),
-          (error: Error | null) => {
-            if (error) {
-              reject(error);
-
-              return;
-            }
-
-            resolve(null);
-          }
-        );
-      });
+      await this.redisClient.set(
+        `account-${account.reference}`,
+        JSON.stringify(account)
+      );
 
       return account;
     } finally {
@@ -52,17 +44,7 @@ export class RedisAccountRepository implements IAccountRepository {
         throw new Error('account does not exist');
       }
 
-      await new Promise((resolve, reject) => {
-        this.redisClient.del(reference, (error: Error | null) => {
-          if (error) {
-            reject(error);
-
-            return;
-          }
-
-          resolve(null);
-        });
-      });
+      await this.redisClient.del(`account-${reference}`);
     } finally {
       await this.mutex.release(`account-${reference}`);
     }
@@ -72,20 +54,9 @@ export class RedisAccountRepository implements IAccountRepository {
     reference: string,
     tenantId: string | null
   ): Promise<IAccount | null> {
-    const json: string | null = await new Promise((resolve, reject) => {
-      this.redisClient.get(
-        `account-${reference}`,
-        (error: Error | null, reply: string | null) => {
-          if (error) {
-            reject(error);
-
-            return;
-          }
-
-          resolve(reply);
-        }
-      );
-    });
+    const json: string | null = await this.redisClient.get(
+      `account-${reference}`
+    );
 
     if (!json) {
       return null;
@@ -102,20 +73,9 @@ export class RedisAccountRepository implements IAccountRepository {
     try {
       await this.mutex.acquire(`account-${reference}`);
 
-      let json: string | null = await new Promise((resolve, reject) => {
-        this.redisClient.get(
-          `account-${reference}`,
-          (error: Error | null, reply: string | null) => {
-            if (error) {
-              reject(error);
-
-              return;
-            }
-
-            resolve(reply);
-          }
-        );
-      });
+      let json: string | null = await this.redisClient.get(
+        `account-${reference}`
+      );
 
       if (!json) {
         throw new Error('account not found');
@@ -125,21 +85,10 @@ export class RedisAccountRepository implements IAccountRepository {
 
       account.availableBalance += amount;
 
-      await new Promise((resolve, reject) => {
-        this.redisClient.set(
-          account.reference,
-          JSON.stringify(account),
-          (error: Error | null) => {
-            if (error) {
-              reject(error);
-
-              return;
-            }
-
-            resolve(null);
-          }
-        );
-      });
+      await this.redisClient.set(
+        `account-${reference}`,
+        JSON.stringify(account)
+      );
 
       return account;
     } finally {
@@ -155,20 +104,9 @@ export class RedisAccountRepository implements IAccountRepository {
     try {
       await this.mutex.acquire(`account-${reference}`);
 
-      let json: string | null = await new Promise((resolve, reject) => {
-        this.redisClient.get(
-          `account-${reference}`,
-          (error: Error | null, reply: string | null) => {
-            if (error) {
-              reject(error);
-
-              return;
-            }
-
-            resolve(reply);
-          }
-        );
-      });
+      let json: string | null = await this.redisClient.get(
+        `account-${reference}`
+      );
 
       if (!json) {
         throw new Error('account not found');
@@ -178,21 +116,10 @@ export class RedisAccountRepository implements IAccountRepository {
 
       account.balance += amount;
 
-      await new Promise((resolve, reject) => {
-        this.redisClient.set(
-          account.reference,
-          JSON.stringify(account),
-          (error: Error | null) => {
-            if (error) {
-              reject(error);
-
-              return;
-            }
-
-            resolve(null);
-          }
-        );
-      });
+      await this.redisClient.set(
+        `account-${reference}`,
+        JSON.stringify(account)
+      );
 
       return account;
     } finally {
