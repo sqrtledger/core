@@ -1,6 +1,6 @@
 {
   "name": "sqrtledger-core",
-  "version": "1.0.0-alpha.38",
+  "version": "1.0.0-alpha.39",
   "description": "The Open-Source API-First Ledger",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -19,12 +19,10 @@
   "dependencies": {
     "joi": "^17.4.2",
     "mongodb": "^4.2.0",
-    "redis": "^4.0.0",
-    "uuid": "^8.3.2"
+    "redis": "^4.0.0"
   },
   "devDependencies": {
     "@types/redis": "^2.8.32",
-    "@types/uuid": "^8.3.3",
     "prettier": "^2.5.0",
     "tslib": "^2.3.1",
     "tslint": "^6.1.3",
