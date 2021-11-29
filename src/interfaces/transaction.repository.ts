@@ -14,7 +14,6 @@ export interface ITransactionRepository {
 
   findAll(
     account: IAccount,
-    filter: { [key: string]: number | string },
     tenantId: string | null
   ): Promise<Array<ITransaction>>;
 

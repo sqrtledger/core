@@ -1,2 +1,2 @@
-export * from './in-memory';
 export * from './mongodb';
+export * from './redis';

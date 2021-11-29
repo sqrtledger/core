@@ -91,15 +91,14 @@ Use npm to install Sqrt Ledger Core:
 
 ```typescript
 import {
+  MongoDbAccountRepository,
+  MongoDbTransactionRepository,
   TransactionService,
   IAccountRepository,
-  InMemoryAccountRepository,
-  InMemoryTransactionRepository,
 } from 'sqrtledger-core';
 
-const accountRepository: IAccountRepository = new InMemoryAccountRepository();
-const transactionRepository: ITransactionRepository =
-  new InMemoryTransactionRepository();
+const accountRepository: IAccountRepository = new MongoDbAccountRepository(null);
+const transactionRepository: ITransactionRepository = new MongoDbTransactionRepository(null);
 
 const transactionService: TransactionService = new TransactionService(
   accountRepository,

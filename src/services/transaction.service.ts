@@ -332,7 +332,6 @@ export class TransactionService {
 
   public async findAll(
     accountReference: string,
-    filter: { [key: string]: number | string },
     tenantId: string | null = null
   ): Promise<Array<ITransaction>> {
     const account: IAccount | null = await this.accountRepository.find(
@@ -348,7 +347,7 @@ export class TransactionService {
       throw new Error('account not active');
     }
 
-    return await this.transactionRepository.findAll(account, filter, tenantId);
+    return await this.transactionRepository.findAll(account, tenantId);
   }
 
   public async process(

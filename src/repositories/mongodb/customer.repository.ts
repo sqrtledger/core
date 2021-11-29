@@ -11,6 +11,7 @@ export class MongoDbCustomerRepository implements ICustomerRepository {
   ): Promise<ICustomer> {
     const insertOneResult = await this.collection.insertOne({
       ...customer,
+      tenantId,
     });
 
     return customer;
@@ -23,10 +24,12 @@ export class MongoDbCustomerRepository implements ICustomerRepository {
     return await this.collection.findOne<ICustomer>(
       {
         emailAddress,
+        tenantId,
       },
       {
         projection: {
           _id: 0,
+          tenantId: 0,
         },
       }
     );
@@ -39,6 +42,7 @@ export class MongoDbCustomerRepository implements ICustomerRepository {
     const updateResult = await this.collection.replaceOne(
       {
         emailAddress: customer.emailAddress,
+        tenantId,
       },
       {
         ...customer,
@@ -46,11 +50,11 @@ export class MongoDbCustomerRepository implements ICustomerRepository {
     );
 
     if (updateResult.matchedCount === 0) {
-      throw new Error('TODO');
+      throw new Error('customer not found');
     }
 
     if (updateResult.modifiedCount === 0) {
-      throw new Error('TODO');
+      throw new Error('customer not found');
     }
 
     return customer;

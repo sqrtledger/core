@@ -13,6 +13,7 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
     await this.collection.insertOne({
       ...transaction,
       accountReference: account.reference,
+      tenantId,
     });
 
     return transaction;
@@ -26,11 +27,13 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
       {
         reference,
         status: 'completed',
+        tenantId,
       },
       {
         projection: {
           _id: 0,
           accountReference: 0,
+          tenantId: 0,
         },
       }
     );
@@ -38,7 +41,6 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
 
   public async findAll(
     account: IAccount,
-    filter: { [key: string]: number | string },
     tenantId: string | null
   ): Promise<Array<ITransaction>> {
     return await this.collection
@@ -46,13 +48,14 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
         {
           accountReference: account.reference,
           status: 'completed',
-          ...filter,
+          tenantId,
         },
         {
           limit: 25,
           projection: {
             _id: 0,
             accountReference: 0,
+            tenantId: 0,
           },
           sort: {
             timestamp: -1,
@@ -72,6 +75,7 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
           $match: {
             accountReference,
             status: 'completed',
+            tenantId,
           },
         },
         {
@@ -97,6 +101,7 @@ export class MongoDbTransactionRepository implements ITransactionRepository {
     await this.collection.updateOne(
       {
         reference: transaction.reference,
+        tenantId,
       },
       {
         $set: {
