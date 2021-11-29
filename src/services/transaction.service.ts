@@ -14,13 +14,13 @@ export class TransactionService {
     tenantId: string | null = null
   ): Promise<{ account: IAccount; transaction: ITransaction }> {
     if (account.availableBalance < 0) {
-      await this.fail(account, transaction);
+      await this.fail(account, transaction, tenantId);
 
       throw new Error('insufficient available balance');
     }
 
     if (account.balance + transaction.amount < 0) {
-      await this.fail(account, transaction);
+      await this.fail(account, transaction, tenantId);
 
       throw new Error('insufficient balance');
     }
@@ -141,7 +141,8 @@ export class TransactionService {
         customer,
         metadata,
         reference,
-        type
+        type,
+        tenantId
       );
     } catch (error) {
       throw error;
@@ -153,10 +154,11 @@ export class TransactionService {
     try {
       resultProcess = await this.process(
         resultCreate.account,
-        resultCreate.transaction
+        resultCreate.transaction,
+        tenantId
       );
     } catch (error) {
-      await this.fail(resultCreate.account, resultCreate.transaction);
+      await this.fail(resultCreate.account, resultCreate.transaction, tenantId);
 
       throw error;
     }
@@ -169,10 +171,15 @@ export class TransactionService {
     try {
       resultComplete = await this.complete(
         resultProcess.account,
-        resultProcess.transaction
+        resultProcess.transaction,
+        tenantId
       );
     } catch (error) {
-      await this.fail(resultProcess.account, resultProcess.transaction);
+      await this.fail(
+        resultProcess.account,
+        resultProcess.transaction,
+        tenantId
+      );
 
       throw error;
     }
@@ -207,7 +214,8 @@ export class TransactionService {
         request.customer,
         request.metadata,
         request.reference,
-        request.type
+        request.type,
+        tenantId
       );
 
       resultsCreate.push(resultCreate);
@@ -231,7 +239,8 @@ export class TransactionService {
 
         const resultProcess = await this.process(
           account,
-          resultCreate.transaction
+          resultCreate.transaction,
+          tenantId
         );
 
         resultsProcess.push(resultProcess);
@@ -260,7 +269,8 @@ export class TransactionService {
 
         const resultComplete = await this.complete(
           account,
-          resultProcess.transaction
+          resultProcess.transaction,
+          tenantId
         );
 
         resultsComplete.push(resultComplete);
