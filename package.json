@@ -1,6 +1,6 @@
 {
   "name": "sqrtledger-core",
-  "version": "1.0.0-alpha.40",
+  "version": "1.0.0-alpha.41",
   "description": "The Open-Source API-First Ledger",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -17,8 +17,8 @@
   "author": "Sqrt Ledger",
   "license": "MIT",
   "dependencies": {
-    "joi": "^17.4.2",
-    "mongodb": "^4.2.0",
+    "joi": "^17.4.3",
+    "mongodb": "^4.2.1",
     "redis": "^4.0.0"
   },
   "devDependencies": {
